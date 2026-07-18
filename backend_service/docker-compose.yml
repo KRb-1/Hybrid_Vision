@@ -1,0 +1,22 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./outputs:/app/outputs
+    environment:
+      CONFIDENCE: "0.25"
+      IMAGE_SIZE: "640"
+      INFERENCE_DEVICE: "cpu"
+      EARLY_FUSION_WEIGHTS: "/app/models/early_fusion_best.pt"
+      TWO_FUSION_WEIGHTS: "/app/models/two_fusion_best.pt"
+      LATE_FUSION_RGB_WEIGHTS: "/app/models/late_fusion_rgb_best.pt"
+      LATE_FUSION_EVENT_WEIGHTS: "/app/models/late_fusion_event_best.pt"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s

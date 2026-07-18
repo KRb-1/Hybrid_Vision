@@ -1,0 +1,9 @@
+.git
+.venv
+.pytest_cache
+.ultralytics
+__pycache__
+*.pyc
+uploads
+outputs
+tmp

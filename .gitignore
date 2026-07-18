@@ -1,0 +1,55 @@
+ami26/
+FRED_ready/
+bp/
+runs_early/
+runs_two/
+reports/
+ami_early_fusion/data/
+ami_two_fusion/data/
+ami_early_fusion/runs/
+ami_two_fusion/runs/
+ami_early_fusion_full/
+ami_two_fusion_full/
+ami_event_prior_fusion/
+.venv/
+
+# Local report helpers kept outside Git.
+README_late_fusion_zh.md
+README_early_fusion_zh.md
+README_two_stream_lite_zh.md
+visualization_checks/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+
+# Flask / local files
+instance/
+*.log
+
+# Backend service generated files
+backend_service/.ultralytics/
+backend_service/uploads/
+backend_service/outputs/
+backend_service/tmp/
+
+# HybridVision Web generated files
+HybridVision_Web/static/uploads/
+HybridVision_Web/static/results/
+HybridVision_Web/uploads/
+HybridVision_Web/results/
+
+# OS files
+.DS_Store
+**/.DS_Store
+._*
+**/._*
+.AppleDouble
+.LSOverride
+Thumbs.db

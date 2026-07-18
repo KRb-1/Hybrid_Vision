@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparison - Hybrid Vision Drone Detection</title>
+
+  <link rel="stylesheet" href="/static/nicepage.css" media="screen">
+  <link rel="stylesheet" href="/static/Comparison.css" media="screen">
+
+  <script class="u-script" type="text/javascript" src="/static/jquery.js" defer=""></script>
+  <script class="u-script" type="text/javascript" src="/static/nicepage.js" defer=""></script>
+  <script src="/static/Comparison.js" defer></script>
+</head>
+
+<body class="u-body u-xl-mode" data-lang="en">
+  <header class="u-clearfix u-header u-sticky u-sticky-94bb u-white u-header" id="sec-12f1">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <a href="/" data-page-id="59158552" class="u-image u-logo u-image-1" data-image-width="800"
+        data-image-height="416" title="Home">
+        <img src="/static/images/Logo_of_the_Technical_University_of_Munich.svg.png"
+          class="u-logo-image u-logo-image-1">
+      </a>
+
+      <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+        <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+          <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-color u-custom-text-hover-color u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+            <svg class="u-svg-link" viewBox="0 0 24 24">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use>
+            </svg>
+            <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0px 0px 16px 16px"
+              xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+              <g>
+                <rect y="1" width="16" height="2"></rect>
+                <rect y="7" width="16" height="2"></rect>
+                <rect y="13" width="16" height="2"></rect>
+              </g>
+            </svg>
+          </a>
+        </div>
+
+        <div class="u-custom-menu u-nav-container">
+          <ul class="u-nav u-unstyled u-nav-1">
+            <li class="u-nav-item">
+              <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/" style="padding: 10px 20px;">Home</a>
+            </li>
+            <li class="u-nav-item">
+              <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/detection" style="padding: 10px 20px;">Detection</a>
+            </li>
+            <li class="u-nav-item">
+              <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/comparison" style="padding: 10px 20px;">Comparison</a>
+            </li>
+            <li class="u-nav-item">
+              <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/tracking" style="padding: 10px 20px;">Tracking</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="u-custom-menu u-nav-container-collapse">
+          <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+            <div class="u-inner-container-layout u-sidenav-overflow">
+              <div class="u-menu-close"></div>
+              <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                <li class="u-nav-item">
+                  <a class="u-button-style u-nav-link" href="/">Home</a>
+                </li>
+                <li class="u-nav-item">
+                  <a class="u-button-style u-nav-link" href="/detection">Detection</a>
+                </li>
+                <li class="u-nav-item">
+                  <a class="u-button-style u-nav-link" href="/comparison">Comparison</a>
+                </li>
+                <li class="u-nav-item">
+                  <a class="u-button-style u-nav-link" href="/tracking">Tracking</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+        </div>
+      </nav>
+    </div>
+
+    <style class="u-sticky-style" data-style-id="94bb">
+      .u-sticky-fixed.u-sticky-94bb:before,
+      .u-body.u-sticky-fixed .u-sticky-94bb:before {
+        borders: top right bottom left !important
+      }
+    </style>
+  </header>
+
+  <main class="comparison-page">
+    <section class="comparison-hero">
+      <h1>Comparison Panel</h1>
+      <p>
+        This page displays E2VID and FireNet reconstruction baseline statistics.
+      </p>
+      <p id="backendStatus" class="backend-status">Checking backend service...</p>
+      <button id="refreshButton" class="refresh-btn" type="button">Refresh Comparison</button>
+    </section>
+
+    <section class="info-card">
+      <h2>What this comparison means</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <h3>Our Hybrid Detection Method</h3>
+          <p id="teamAInfo">Online RGB/Event fusion detection methods will be loaded from the backend.</p>
+        </div>
+        <div class="info-item">
+          <h3>Compared Baseline Methods</h3>
+          <p>
+            
+            E2VID and FireNet are shown as precomputed offline reconstruction baselines.
+          </p>
+        </div>
+        <div class="info-item">
+          <h3>Metric note</h3>
+          <p>
+            Detection coverage means detected frames divided by reconstructed frames.
+            It is not mAP, precision, or recall.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="main-metrics-section">
+      <h2>Main Detection Metrics</h2>
+      <p class="section-note">
+        Compare RGB-Event fusion methods with event-only reconstruction baselines.
+      </p>
+
+      <div class="metrics-card">
+        <div class="table-wrapper">
+          <table class="main-metrics-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>mAP@0.5</th>
+                <th>mAP@0.5:0.95</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="best-method-row">
+                <td>Two-Stream Lite Fusion</td>
+                <td>82.72%</td>
+                <td>78.74%</td>
+                <td>78.59%</td>
+                <td>36.48%</td>
+              </tr>
+              <tr>
+                <td>Early Fusion</td>
+                <td>81.58%</td>
+                <td>78.72%</td>
+                <td>77.70%</td>
+                <td>36.13%</td>
+              </tr>
+              <tr>
+                <td>Late Fusion</td>
+                <td>40.72%</td>
+                <td>64.78%</td>
+                <td>50.57%</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>FireNet Reconstruction</td>
+                <td>22.10%</td>
+                <td>7.97%</td>
+                <td>3.63%</td>
+                <td>0.85%</td>
+              </tr>
+              <tr>
+                <td>E2VID Reconstruction</td>
+                <td>0.04%</td>
+                <td>0.53%</td>
+                <td>0.0004%</td>
+                <td>0.0002%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="loadingSection" class="status-section">
+      Loading comparison data...
+    </section>
+
+    <section id="errorSection" class="status-section error hidden"></section>
+
+    <section id="summarySection" class="summary-section hidden">
+      <h2>Detailed Statistics</h2>
+      <div id="methodCards" class="method-cards"></div>
+    </section>
+
+    <section id="sampleSection" class="sample-section hidden">
+      <h2>Sample Detection Images</h2>
+      <div id="sampleGallery" class="sample-gallery"></div>
+    </section>
+  </main>
+
+  <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-eddf">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <p class="u-small-text u-text u-text-variant u-text-1">
+        TUM - Applied Machine Intelligence<br><br>
+        Group 2<br>
+        Yajie Bin, Zhe Chen, Wenqian He, Ru Jia,<br>
+        Yijiao Wang, Yongdong Xie, Zhengying Xu <br><br>
+        Summer Semester 2026
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

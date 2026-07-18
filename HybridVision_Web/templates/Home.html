@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="keywords" content="Hybrid Vision, Drone Detection, Applied Machine Intelligence, TUM">
+  <meta name="description" content="Hybrid Vision System for Improved Drone Detection combining RGB and Event sensors.">
+  <title>Home - Hybrid Vision Drone Detection</title>
+  <link rel="stylesheet" href="/static/nicepage.css" media="screen">
+  <link rel="stylesheet" href="/static/Home.css" media="screen">
+  <script class="u-script" type="text/javascript" src="/static/jquery.js" defer=""></script>
+  <script class="u-script" type="text/javascript" src="/static/nicepage.js" defer=""></script>
+  <meta name="generator" content="Nicepage 4.17.7, nicepage.com">
+  <link id="u-theme-google-font" rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+  <link id="u-page-google-font" rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700|Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "TUM-AMI-HybridVision",
+    "logo": "images/Logo_of_the_Technical_University_of_Munich.svg.png"
+}</script>
+  <meta name="theme-color" content="#478ac9">
+  <meta property="og:title" content="Home - Hybrid Vision">
+  <meta property="og:type" content="website">
+</head>
+
+
+<body class="u-body u-xl-mode" data-lang="en">
+  <header class="u-clearfix u-header u-sticky u-sticky-94bb u-white u-header" id="sec-12f1">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <a href="/" data-page-id="59158552" class="u-image u-logo u-image-1" data-image-width="800"
+        data-image-height="416" title="Home">
+        <img src="/static/images/Logo_of_the_Technical_University_of_Munich.svg.png"
+          class="u-logo-image u-logo-image-1">
+      </a>
+      <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+        <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+          <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-color u-custom-text-hover-color u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+            <svg class="u-svg-link" viewBox="0 0 24 24">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use>
+            </svg>
+            <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px"
+              xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+              <g>
+                <rect y="1" width="16" height="2"></rect>
+                <rect y="7" width="16" height="2"></rect>
+                <rect y="13" width="16" height="2"></rect>
+              </g>
+            </svg>
+          </a>
+        </div>
+
+        <div class="u-custom-menu u-nav-container">
+          <ul class="u-nav u-unstyled u-nav-1">
+            <li class="u-nav-item"><a
+                class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/" style="padding: 10px 20px;">Home</a>
+            </li>
+            <li class="u-nav-item"><a
+                class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/detection" style="padding: 10px 20px;">Detection</a>
+            </li>
+            <li class="u-nav-item"><a
+                class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/comparison" style="padding: 10px 20px;">Comparison</a>
+            </li>
+            <li class="u-nav-item">
+              <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/tracking" style="padding: 10px 20px;">Tracking</a>
+            </li>
+          </ul>
+        </div>
+        <div class="u-custom-menu u-nav-container-collapse">
+          <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+            <div class="u-inner-container-layout u-sidenav-overflow">
+              <div class="u-menu-close"></div>
+              <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/">Home</a>
+                </li>
+                <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/detection">Detection</a>
+                </li>
+                <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/comparison">Comparison</a>
+                </li>
+                <li class="u-nav-item">
+                  <a class="u-button-style u-nav-link" href="/tracking">Tracking</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+        </div>
+      </nav>
+    </div>
+    <style class="u-sticky-style" data-style-id="94bb">
+      .u-sticky-fixed.u-sticky-94bb:before,
+      .u-body.u-sticky-fixed .u-sticky-94bb:before {
+        borders: top right bottom left !important
+      }
+    </style>
+  </header>
+  
+  <section class="u-clearfix u-image u-section-1" id="sec-186e" data-image-width="1920" data-image-height="1134">
+    <div class="u-clearfix u-sheet u-valign-middle-lg u-sheet-1">
+      <h1
+        class="u-align-left-sm u-align-left-xs u-align-center-lg u-align-center-md u-align-center-xl u-color-scheme-u10 u-color-style-multicolor-1 u-text u-text-body-alt-color u-title u-text-1">
+        Hybrid Vision Drone Detection</h1>
+      <h4
+        class="u-align-left-sm u-align-left-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-body-alt-color u-text-2">
+        An efficient hybrid vision system built for advanced drone detection and localization by fusing synchronized RGB and event camera data. </h4>
+    </div>
+  </section>
+
+  <section class="u-align-center u-black u-clearfix u-section-2" id="carousel_52c8">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <h2 class="u-text u-text-1">System Features</h2>
+      <h5 class="u-text u-text-2">A web interface for visualizing RGB-event drone detection.</h5>
+      <div class="u-expanded-width u-list u-list-1">
+        <div class="u-repeater u-repeater-1">
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-1">
+              <span class="u-file-icon u-icon u-text-palette-3-base u-icon-1"><img src="/static/images/icons1.png" alt=""></span>
+              <h5 class="u-text u-text-3">RGB-Event Input</h5>
+              <p class="u-text u-text-grey-40 u-text-4">Overcoming traditional RGB limits under extreme light conditions using event streams.</p>
+            </div>
+          </div>
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-2">
+              <span class="u-file-icon u-icon u-text-palette-3-base u-icon-2"><img src="/static/images/icons2.png" alt=""></span>
+              <h5 class="u-text u-text-5">Robust Fusion</h5>
+              <p class="u-text u-text-grey-40 u-text-6">Combining RGB spatial resolution with event high temporal resolution for precise tracking.</p>
+            </div>
+          </div>
+          <div class="u-align-center u-container-style u-list-item u-repeater-item">
+            <div class="u-container-layout u-similar-container u-container-layout-3">
+              <span class="u-file-icon u-icon u-text-palette-3-base u-icon-3"><img src="/static/images/icons3.png" alt=""></span>
+              <h5 class="u-text u-text-7">Resource-Efficient</h5>
+              <p class="u-text u-text-grey-40 u-text-8">Optimized models designed to run with the least amount of computational resources.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pipeline-section">
+    <div class="home-container">
+      <div class="section-heading">
+        <h5 class="section-label">SYSTEM WORKFLOW</h5>
+        <h2>Overall System Pipeline</h2>
+      </div>
+
+      <div class="pipeline-card">
+        <img src="/static/images/system_pipeline.png" alt="Overall System Pipeline">
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-preview-section">
+    <div class="home-container demo-preview-grid">
+
+      <div class="demo-text">
+        <h5 class="section-label">LIVE RESULT PREVIEW</h5>
+        <h2>Demo Detection</h2>
+      </div>
+
+      <div class="demo-video-card">
+        <video autoplay muted loop playsinline controls>
+          <source src="/static/images/demo_detection.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="u-align-center u-clearfix u-section-3" id="run-detection-section">
+  <div class="u-clearfix u-sheet u-sheet-1">
+    
+    <div class="detection-card">
+      <h5 class="section-label">START THE DEMO</h5>
+
+      <h2 class="detection-title">Run Drone Detection</h2>
+
+      <p class="detection-description">
+        Upload synchronized RGB and event data, run the hybrid vision detection model,
+        and visualize the RGB input, event representation, and detection output with
+        bounding boxes and class labels.
+      </p>
+
+      <div class="detection-steps">
+        <div class="step-item">
+          <span>1</span>
+          <p>Select input type</p>
+        </div>
+
+        <div class="step-item">
+          <span>2</span>
+          <p>Upload RGB/Event data</p>
+        </div>
+
+        <div class="step-item">
+          <span>3</span>
+          <p>View detection result</p>
+        </div>
+      </div>
+
+      <a href="/detection"
+         class="u-border-2 u-border-palette-3-base u-btn u-btn-round u-button-style u-hover-palette-3-base u-radius-25 u-text-hover-white u-text-palette-3-base start-detection-btn">
+         START DETECTION
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+  <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-eddf">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <p class="u-small-text u-text u-text-variant u-text-1">TUM - Applied Machine Intelligence<br><br>Group 2<br>Yajie Bin, Zhe Chen, Wenqian He, Ru Jia,<br> 
+Yijiao Wang, Yongdong Xie, Zhengying Xu <br><br>Summer Semester 2026
+      </p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

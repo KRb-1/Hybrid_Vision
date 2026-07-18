@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hybrid Vision Drone Detection</title>
+    <link rel="stylesheet" href="/static/nicepage.css" media="screen">
+    <link rel="stylesheet" href="/static/Detection.css" media="screen">
+    <script class="u-script" type="text/javascript" src="/static/jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="/static/nicepage.js" defer=""></script>
+    <script src="/static/Detection.js" defer></script>
+</head>
+
+<body class="u-body u-xl-mode" data-lang="en">
+  <header class="u-clearfix u-header u-sticky u-sticky-94bb u-white u-header" id="sec-12f1">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <a href="/" data-page-id="59158552" class="u-image u-logo u-image-1" data-image-width="800"
+        data-image-height="416" title="Home">
+        <img src="/static/images/Logo_of_the_Technical_University_of_Munich.svg.png"
+          class="u-logo-image u-logo-image-1">
+      </a>
+
+      <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+        <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+          <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-color u-custom-text-hover-color u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+            <svg class="u-svg-link" viewBox="0 0 24 24">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use>
+            </svg>
+            <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0px 0px 16px 16px"
+              xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+              <g>
+                <rect y="1" width="16" height="2"></rect>
+                <rect y="7" width="16" height="2"></rect>
+                <rect y="13" width="16" height="2"></rect>
+              </g>
+            </svg>
+          </a>
+        </div>
+
+        <div class="u-custom-menu u-nav-container">
+          <ul class="u-nav u-unstyled u-nav-1">
+            <li class="u-nav-item">
+              <a
+                class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/" style="padding: 10px 20px;">Home</a>
+            </li>
+            <li class="u-nav-item">
+              <a
+                class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/detection" style="padding: 10px 20px;">Detection</a>
+            </li>
+            <li class="u-nav-item">
+              <a
+                class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/comparison" style="padding: 10px 20px;">Comparison</a>
+            </li>
+            <li class="u-nav-item">
+              <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-body-color u-text-hover-palette-3-base"
+                href="/tracking" style="padding: 10px 20px;">Tracking</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="u-custom-menu u-nav-container-collapse">
+          <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+            <div class="u-inner-container-layout u-sidenav-overflow">
+              <div class="u-menu-close"></div>
+              <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                <li class="u-nav-item">
+                  <a class="u-button-style u-nav-link" href="/">Home</a>
+                </li>
+                <li class="u-nav-item">
+                  <a class="u-button-style u-nav-link" href="/detection">Detection</a>
+                </li>
+                <li class="u-nav-item">
+                  <a class="u-button-style u-nav-link" href="/comparison">Comparison</a>
+                </li>
+                <li class="u-nav-item">
+                  <a class="u-button-style u-nav-link" href="/tracking">Tracking</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+        </div>
+      </nav>
+    </div>
+
+    <style class="u-sticky-style" data-style-id="94bb">
+      .u-sticky-fixed.u-sticky-94bb:before,
+      .u-body.u-sticky-fixed .u-sticky-94bb:before {
+        borders: top right bottom left !important
+      }
+    </style>
+  </header>
+
+  <main class="detection-page">
+
+    <section class="detection-hero">
+      <h1>Drone Detection Demo</h1>
+      <p>
+        Upload a synchronized RGB/Event image pair or two aligned frame-sequence ZIP files.
+        The system will run hybrid drone detection and visualize the input streams and output result.
+      </p>
+
+      <p id="backendStatus" class="backend-status">Checking backend service...</p>
+    </section>
+
+    <section class="upload-card">
+
+      <form id="detectForm" class="upload-form">
+
+        <div class="form-row single-row">
+          <div class="form-group">
+            <label for="inputTypeSelect">Input Type</label>
+            <select id="inputTypeSelect" name="input_type">
+              <option value="image" selected>Single image pair</option>
+              <option value="sequence">Frame sequence zip</option>
+            </select>
+            <p class="form-help">
+              Choose single-frame detection or sequence detection with synchronized RGB/Event frame ZIP files.
+            </p>
+          </div>
+        </div>
+
+        <div id="imageInputs" class="form-row">
+          <div class="form-group">
+            <label for="rgbFile">RGB Image</label>
+            <input id="rgbFile" type="file" name="rgb_file" accept="image/*">
+            <p class="form-help">Upload one RGB frame, e.g. JPG or PNG.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="eventFile">Event Image</label>
+            <input id="eventFile" type="file" name="event_file" accept="image/*">
+            <p class="form-help">Upload the synchronized event frame image.</p>
+          </div>
+        </div>
+
+        <div id="sequenceInputs" class="form-row hidden">
+          <div class="form-group">
+            <label for="rgbZip">RGB Frames ZIP</label>
+            <input id="rgbZip" type="file" name="rgb_zip" accept=".zip">
+            <p class="form-help">
+              Upload ZIP containing RGB frames.
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="eventZip">Event Frames ZIP</label>
+            <input id="eventZip" type="file" name="event_zip" accept=".zip">
+            <p class="form-help">
+              Upload ZIP containing synchronized event frames.
+            </p>
+          </div>
+        </div>
+
+        <div class="form-row model-row">
+
+          <div class="form-group">
+            <label for="methodSelect">Fusion Model</label>
+            <select id="methodSelect" name="method">
+              <option value="two_fusion" selected>two_fusion</option>
+              <option value="early_fusion">early_fusion</option>
+              <option value="late_fusion">late_fusion</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="confidenceInput">Confidence Threshold</label>
+            <input id="confidenceInput" type="number" min="0" max="1" step="0.01" value="0.25">
+          </div>
+
+          <div id="fpsGroup" class="form-group sequence-setting hidden">
+            <label for="fpsInput">Playback FPS</label>
+            <input id="fpsInput" type="number" min="1" max="120" step="1" value="30">
+          </div>
+
+          <div id="maxFramesGroup" class="form-group sequence-setting hidden">
+            <label for="maxFramesInput">Max Frames</label>
+            <input id="maxFramesInput" type="number" min="1" max="3000" step="1" value="300">
+          </div>
+
+        </div>
+
+        <button id="detectButton" type="submit" class="run-btn">Run Detection</button>
+
+        <p id="message" class="message"></p>
+
+      </form>
+    </section>
+
+    <!-- 输入图片预览区域 -->
+    <section id="previewSection" class="result-section hidden">
+      <h2>Input Preview</h2>
+
+      <div class="image-grid two-columns">
+
+        <div class="image-card">
+          <h3>RGB Input</h3>
+          <img id="rgbPreview" alt="RGB input preview">
+        </div>
+
+        <div class="image-card">
+          <h3>Event Input</h3>
+          <img id="eventPreview" alt="Event input preview">
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 显示后端返回的检测结果图片和检测框信息 -->
+    <section id="resultSection" class="result-section hidden">
+      <h2>Detection Results</h2>
+
+      <div class="image-grid result-grid">
+
+        <!-- 显示后端返回的 visualization_url -->
+        <div class="image-card result-image-card">
+          <h3>Detection Output</h3>
+          <img id="resultImage" alt="Detection output image">
+        </div>
+
+        <!-- 显示 detections 里的 confidence 和 bbox -->
+        <div class="image-card detection-info-card">
+          <h3>Detection Information</h3>
+
+          <div id="summaryBox" class="summary-box"></div>
+
+          <div class="table-wrapper">
+            <table id="detectionsTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Class</th>
+                  <th>Confidence</th>
+                  <th>Source</th>
+                  <th>BBox xyxy</th>
+                  <th>BBox xywh</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <section id="videoResultSection" class="result-section hidden">
+      <h2>Sequence Video Playback</h2>
+
+      <div class="video-toolbar">
+        <button id="playAllButton" type="button">Play All</button>
+        <button id="pauseAllButton" type="button">Pause All</button>
+        <button id="restartAllButton" type="button">Restart</button>
+
+        <label for="playbackRateSelect">Speed</label>
+        <select id="playbackRateSelect">
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="1.5">1.5×</option>
+          <option value="2">2×</option>
+        </select>
+      </div>
+
+      <div class="video-grid">
+
+        <div class="video-card">
+          <h3>RGB Frames Video</h3>
+          <video id="rgbInputVideo" controls muted loop playsinline></video>
+        </div>
+
+        <div class="video-card">
+          <h3>Event Frames Video</h3>
+          <video id="eventInputVideo" controls muted loop playsinline></video>
+        </div>
+
+        <div class="video-card output-video-card">
+          <h3>Detection Output Video</h3>
+          <video id="outputDetectionVideo" controls muted loop playsinline></video>
+        </div>
+
+      </div>
+
+      <div class="image-card sequence-info-card">
+        <h3>Sequence Detection Summary</h3>
+        <div id="sequenceSummaryBox" class="summary-box"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-eddf">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <p class="u-small-text u-text u-text-variant u-text-1">
+        TUM - Applied Machine Intelligence<br><br>
+        Group 2<br>
+        Yajie Bin, Zhe Chen, Wenqian He, Ru Jia,<br>
+        Yijiao Wang, Yongdong Xie, Zhengying Xu <br><br>
+        Summer Semester 2026
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

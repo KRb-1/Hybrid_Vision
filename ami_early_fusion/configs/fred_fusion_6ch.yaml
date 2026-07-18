@@ -1,0 +1,7 @@
+path: data/fred_fusion_6ch
+train: images/train
+val: images/val
+test: images/test
+channels: 6
+names:
+  0: drone

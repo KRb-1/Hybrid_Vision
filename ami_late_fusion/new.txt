@@ -1,0 +1,26 @@
+## RGB-Event Late Fusion Baseline
+
+We trained two YOLOv8n detectors on the filtered FRED dataset: one RGB-only detector and one Event-only detector. The filtered dataset contains 50,839 training samples and 9,156 test samples. RGB and Event frames were temporally aligned, and samples with alignment error larger than 20 ms were removed. All positive drone samples were retained, while only 10% of background-only samples were kept.
+
+### Dataset Split
+
+Train sequences: 0, 1, 2, 3, 4, 5, 6, 7, 11, 13, 14, 15, 18, 19, 25, 26, 30, 31, 32, 37, 38, 39, 40, 41, 46.
+
+Test sequences: 8, 9, 12, 20, 21.
+
+### Single-Modality Results
+
+| Model | Precision | Recall | mAP@0.5 | mAP@0.5:0.95 |
+|---|---:|---:|---:|---:|
+| RGB-only YOLOv8n | 0.721 | 0.466 | 0.444 | 0.144 |
+| Event-only YOLOv8n | 0.611 | 0.536 | 0.495 | 0.226 |
+
+### Late Fusion Result
+
+RGB and Event predictions were merged and filtered using NMS.
+
+| Method | Final boxes | TP | FP | FN | mAP@0.5 |
+|---|---:|---:|---:|---:|---:|
+| RGB + Event Late Fusion | 13,277 | 5,406 | 7,871 | 2,939 | 0.5057 |
+
+The Event-only model outperformed the RGB-only model, showing that event frames provide useful motion cues for drone detection. The late fusion strategy further improved mAP@0.5 from 0.444 and 0.495 to 0.5057, indicating complementary information between RGB and Event modalities.

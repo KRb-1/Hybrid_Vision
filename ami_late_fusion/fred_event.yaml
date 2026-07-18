@@ -1,0 +1,6 @@
+path: ../FRED_ready
+train: train/events
+val: test/events 
+
+nc: 1
+names: ['drone']

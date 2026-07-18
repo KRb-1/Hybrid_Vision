@@ -1,0 +1,16 @@
+data: data/fred_fusion_6ch/fred_fusion_6ch.yaml
+weights: yolov8m.pt
+imgsz: 960
+epochs: 50
+batch: 8
+workers: 12
+device: 0
+amp: true
+optimizer: AdamW
+lr0: 0.003
+cos_lr: true
+close_mosaic: 10
+patience: 20
+project: runs/fred
+name: early_fusion_yolov8m_960_e50
+patch_strategy: scratch_event

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+data/
+runs/
+reports/two_stream_predictions/
+reports/env_info.txt
+reports/two_stream_pretrained_report.txt
