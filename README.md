@@ -124,6 +124,4 @@ The repository includes model checkpoints, selected result folders, sample image
 
 For Docker image submission, the backend can be rebuilt from `backend_service/Dockerfile` and `backend_service/docker-compose.yml`. If a generated Docker image or result archive is larger than the GitLab limit, it should be uploaded separately with the course-recommended large-file upload mechanism.
 
-## Submission Repository
 
-This README replaces the default GitLab template for the Group02 submission repository and summarizes the purpose of the folders and files included in the submitted codebase.
