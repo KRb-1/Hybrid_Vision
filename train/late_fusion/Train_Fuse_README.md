@@ -19,14 +19,15 @@ yolo detect train data=fred_event.yaml model=yolov8m-p2.yaml pretrained=../yolov
 ```
 
     hint: 
-    如果报错，把model=yolov8m-p2.yaml pretrained=yolov8m.pt改成model=yolov8m.pt 
-    如果显存不够，batch=8
+    If `yolov8m-p2.yaml` is not available, use `model=yolov8m.pt`.
+    If GPU memory is not enough, reduce the batch size to 8.
 
 3. run `inference_single_model.py`
 
-    默认读取 `ami_late_fusion/rgb_official_best.pt` 和 `ami_late_fusion/event_official_best.pt`，
-    数据默认读取 `../FRED_ready/val/images` 和 `../FRED_ready/val/events`。
-    如果路径不同，用参数覆盖：
+    By default, the script reads `ami_late_fusion/rgb_official_best.pt`
+    and `ami_late_fusion/event_official_best.pt`.
+    The default data paths are `../FRED_ready/val/images` and `../FRED_ready/val/events`.
+    Override the paths with arguments if your local layout is different:
 
 ```
 python inference_single_model.py \
@@ -38,10 +39,11 @@ python inference_single_model.py \
 
 4. run `fuse_predictions_nms.py`
     
-    `fuse_predictions.py` 和 `fuse_predictions_nms.py` 当前都是 NMS-style late fusion。
+    Both `fuse_predictions.py` and `fuse_predictions_nms.py` currently implement
+    NMS-style late fusion.
 
 5. run `evaluate_map.py`
-    从数据上评估预测的结果
+    Evaluate the prediction file against the dataset labels.
 
 6. run `visualize_boxes.py`
-    可视化预测结果
+    Visualize predicted bounding boxes.

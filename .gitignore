@@ -1,17 +1,35 @@
 ami26/
 FRED_ready/
 bp/
-runs_early/
-runs_two/
 reports/
-ami_early_fusion/data/
-ami_two_fusion/data/
-ami_early_fusion/runs/
-ami_two_fusion/runs/
 ami_early_fusion_full/
 ami_two_fusion_full/
 ami_event_prior_fusion/
 .venv/
+
+# Training data and generated runs.
+train/**/data/
+train/**/runs/
+train/**/final_results*/
+train/late_fusion/predictions_*.txt
+runs/
+runs_early/
+runs_two/
+ami_runs/
+
+# Large training artifacts. Keep selected final checkpoints and YOLO base
+# checkpoints under train/.
+*.pt
+**/weights/
+!backend_service/models/*.pt
+!train/results/**/*.pt
+!train/yolo_checkpoints/*.pt
+
+# Packaged exports should live outside Git or in a release artifact.
+*.tar
+*.tar.gz
+final_package_official_0_180/
+teamA_fusion_repo/
 
 # Local report helpers kept outside Git.
 README_late_fusion_zh.md
