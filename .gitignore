@@ -17,13 +17,19 @@ runs_early/
 runs_two/
 ami_runs/
 
-# Large training artifacts. Keep selected final checkpoints and YOLO base
-# checkpoints under train/.
+# Model checkpoints and exported model binaries.
 *.pt
+*.pth
+*.ckpt
+*.onnx
+*.h5
+*.hdf5
+*.pb
+*.tflite
 **/weights/
-!backend_service/models/*.pt
-!train/results/**/*.pt
-!train/yolo_checkpoints/*.pt
+**/checkpoints/
+train/results/
+train/yolo_checkpoints/
 
 # Packaged exports should live outside Git or in a release artifact.
 *.tar
@@ -39,13 +45,33 @@ visualization_checks/
 
 # Python cache
 __pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
 *.pyc
 *.pyo
 *.pyd
 
+# Build and packaging output
+build/
+dist/
+*.egg-info/
+.coverage
+htmlcov/
+
 # Virtual environments
 venv/
 env/
+
+# Local environment files and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
 
 # Flask / local files
 instance/
@@ -56,12 +82,21 @@ backend_service/.ultralytics/
 backend_service/uploads/
 backend_service/outputs/
 backend_service/tmp/
+backend_service/test_assets/
 
 # HybridVision Web generated files
 HybridVision_Web/static/uploads/
 HybridVision_Web/static/results/
 HybridVision_Web/uploads/
 HybridVision_Web/results/
+HybridVision_Web/static/tracking/
+HybridVision_Web/static/images/demo_detection.mp4
+
+# Generated tracking visualizations and temporary media.
+trackpre/vis_result/
+
+# JavaScript dependencies and build output.
+node_modules/
 
 # OS files
 .DS_Store
