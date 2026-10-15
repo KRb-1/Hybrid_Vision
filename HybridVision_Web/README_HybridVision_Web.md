@@ -1,320 +1,123 @@
-# Hybrid Vision Drone Detection Web Frontend
+# Hybrid Vision — Flask Web Frontend
 
-This file contains the web frontend for the **Hybrid Vision Drone Detection** demo. The website provides a user interface for running RGB-Event drone detection and for viewing comparison results of offline baseline methods.
+This folder provides the **browser interface** for the TUM AMI Group 02 RGB–Event Drone Detection project. Flask serves the HTML pages on port **8888**; the browser's JavaScript directly calls a separate FastAPI backend at `http://localhost:8000`.
 
-The frontend is built with **Flask**, **HTML**, **CSS**, and **JavaScript**. It communicates with a separate FastAPI backend service through HTTP API calls.
+> **Verified against current code:** `app.py`, `templates/*.html`, `static/Detection.js`, and `static/Comparison.js`. This is **not** a standalone detector: you need the backend and relevant YOLO weights for live detection.
 
----
+## Features and routes
 
-## 1. Main Features
+| URL | Page | What users can do |
+| --- | --- | --- |
+| `/` | Home | See the project introduction, workflow and detection entry point. |
+| `/detection` | Detection | Run single RGB/Event image-pair detection **or** ZIP frame-sequence detection; choose among three methods; display image/video results. |
+| `/comparison` | Comparison | Read E2VID/FireNet offline coverage statistics and sample images from the API; see a separate, **static HTML table** of reported detection metrics. |
+| `/tracking` | Tracking | Read about the ByteTrack → Transformer pipeline; view/download **precomputed** media when the expected static files are present. |
 
-The website contains three main pages:
+## Detection page: exact implemented behavior
 
-- **Home**: Introduction page for the Hybrid Vision project.
-- **Detection**: Upload one RGB image and one synchronized Event frame image, select a fusion model, run detection, and display the returned bounding boxes and visualization image.
-- **Comparison**: Display offline comparison statistics for E2VID and FireNet baselines using data loaded from the backend.
+The Input Type selector in `templates/Detection.html` offers **two**, not three, options:
 
----
+### 1. `Single image pair`
 
-## 2. Project Structure
+1. Upload an aligned **RGB Image** and **Event Image** (rendered Event frame, not raw events).
+2. Choose `two_fusion` (default), `early_fusion`, or `late_fusion`.
+3. Set confidence between 0 and 1 (default `0.25`) and select **Run Detection**.
+4. The browser calls `POST /api/detect` with `rgb_file`, `event_file`, `method`, `confidence`, and `use_tracking=false`.
+5. The page shows the input previews, annotated RGB detection image, status, method, number of detections and a table of class, confidence, source, `bbox_xyxy` and `bbox_xywh`.
+
+### 2. `Frame sequence zip`
+
+1. Upload **RGB Frames ZIP** and **Event Frames ZIP**, containing already prepared frame images.
+2. Choose a model and optionally change **Playback FPS** (default `30`; 1–120) and **Max Frames** (default `300`; 1–3000).
+3. Select **Run Sequence Detection**. The browser calls `POST /api/detect-sequence` using `rgb_zip`, `event_zip`, `method`, `confidence`, `fps`, `max_frames`.
+4. The server processes the aligned image pairs and returns `rgb_video_url`, `event_video_url`, `output_video_url`, `frame_count`, `total_detections`, and `detections_per_frame`.
+5. The site displays the resulting **RGB Input Video**, **Event Input Video** and **Detection Output Video** side by side (video layout may wrap by screen width). It offers **Play All**, **Pause All**, **Restart**, and speed options **0.5×/1×/1.5×/2×**. Playback events, seeking, rates, and time updates are synchronized by `static/Detection.js`.
+
+**Prepare inputs carefully:** ZIP files are recursively collected and naturally sorted by filename; corresponding positions are treated as synchronized pairs. Files are not paired by timestamp. Use matching lists such as:
+
+```text
+rgb_frames.zip                  event_frames.zip
+└── 000001.png                  └── 000001.png
+└── 000002.png                  └── 000002.png
+└── 000003.png                  └── 000003.png
+```
+
+Supported image suffixes include `.jpg`, `.jpeg`, `.png`, `.bmp`, `.webp`, `.tif`, and `.tiff`. These are image-frame ZIPs; **direct MP4 video upload, raw event streams, and a `/api/detect-video` endpoint are not implemented**.
+
+## Comparison page
+
+`static/Comparison.js` calls `GET /api/compare` and renders:
+
+- A list of online fusion methods reported by the backend.
+- Cards for **E2VID** and **FireNet** containing number of sequences, reconstructed frames, frames with detection outputs and detection coverage.
+- Sample detection-image galleries supplied by the API; a Refresh button reloads the data.
+
+**Metric caveat:** The Precision / Recall / mAP table near the top of `templates/Comparison.html` is hardcoded HTML (it is *not* filled from the API). The API's `detection_coverage` is the fraction of reconstructed images producing detection files, **not mAP or recall**. The reconstruction methods remain offline baselines and are not options in the Detection model selector.
+
+## Tracking page
+
+`templates/Tracking.html` is a **static informational showcase** of ByteTrack association and Transformer trajectory forecasting (12-frame observations and 24-frame future predictions are documented in [`../trackpre/README.md`](../trackpre/README.md)). The HTML expects these assets:
+
+```text
+HybridVision_Web/static/tracking/seq51/
+├── output.mp4
+├── tracks.txt
+└── predictions_future.txt
+```
+
+**These files are not currently committed to the public repository.** The page route exists, but playback/download links will not work unless the assets are added at the expected locations. This page does **not** call a live tracking endpoint or execute the `trackpre/` pipeline.
+
+## Frontend directory guide
 
 ```text
 HybridVision_Web/
-├── app.py
+├── app.py                         # Flask routing: /, /detection, /comparison, /tracking
 ├── templates/
-│   ├── Home.html
-│   ├── Detection.html
-│   └── Comparison.html
+│   ├── Home.html                  # Project overview / entry page
+│   ├── Detection.html             # Two detection modes and video controls
+│   ├── Comparison.html            # Static metrics table + API-loaded baseline panels
+│   └── Tracking.html              # Static tracking showcase
 ├── static/
-│   ├── Home.css
-│   ├── Detection.css
-│   ├── Detection.js
-│   ├── Comparison.css
-│   ├── Comparison.js
-│   ├── nicepage.css
-│   ├── nicepage.js
-│   ├── jquery.js
-│   └── images/
-│       └── background.png
-├── models/
-│   └── detector.py
-└── utils/
+│   ├── Detection.js               # Health check, form submission, result rendering, video sync
+│   ├── Comparison.js              # Read /api/compare and populate offline baseline cards
+│   ├── Home.css / Detection.css / Comparison.css / Tracking.css
+│   ├── jquery.js / nicepage.js / nicepage.css
+│   └── images/                    # Site visual assets
+└── models/detector.py             # Legacy placeholder: NOT called by current Flask app
 ```
 
-Important files:
+The old `models/detector.py` copies an input file rather than running the real detector. It is retained in the repository but **not used** by the current Flask app; actual inference is performed by FastAPI.
 
-| File | Description |
-|---|---|
-| `app.py` | Flask entry point. It serves the Home, Detection, and Comparison pages. |
-| `templates/Home.html` | Landing page. |
-| `templates/Detection.html` | Detection page UI. |
-| `templates/Comparison.html` | Comparison page UI. |
-| `static/Detection.js` | Calls `POST /api/detect` from the backend. |
-| `static/Comparison.js` | Calls `GET /api/compare` from the backend. |
-| `static/Detection.css` | Styles for the Detection page. |
-| `static/Comparison.css` | Styles for the Comparison page. |
-| `static/images/background.png` | Fixed background image used by Detection and Comparison pages. |
+## Start the application
 
----
+**Prerequisites:** Python 3, `flask`, running FastAPI backend on `localhost:8000`, and backend model weights. The current backend Dockerfile expects checkpoint files under `backend_service/models/` (not shipped in the public `main` branch).
 
-## 3. System Architecture
+**Terminal 1 — Backend:** from the repository root, after supplying weights:
 
-The website is only the frontend. The detection model and comparison data are provided by the backend service.
-
-```text
-Browser
-  ↓
-Flask Frontend
-http://localhost:8888
-  ↓ JavaScript fetch()
-FastAPI Backend
-http://localhost:8000
-  ↓
-Hybrid RGB-Event detection model / comparison data
-```
-
-Frontend pages:
-
-```text
-http://localhost:8888/             Home page
-http://localhost:8888/detection    Detection page
-http://localhost:8888/comparison   Comparison page
-```
-
-Backend API endpoints used by the frontend:
-
-```text
-GET  http://localhost:8000/api/health
-POST http://localhost:8000/api/detect
-GET  http://localhost:8000/api/compare
-```
-
----
-
-## 4. Prerequisites
-
-Before running the website, make sure the following tools are installed:
-
-### Required for frontend
-
-- Python 3.9 or later
-- Flask
-
-### Required for backend
-
-- Docker Desktop
-- Docker Compose
-- The backend service folder, usually named `backend_service`
-
-The backend must be running before the Detection and Comparison pages can load API results.
-
----
-
-## 5. Install Frontend Dependencies
-
-Open a terminal or PowerShell inside the frontend folder:
-
-```powershell
-cd path\to\HybridVision_Web
-```
-
-Install Flask:
-
-```powershell
-pip install flask
-```
-
-If you use a virtual environment, create and activate it first:
-
-```powershell
-python -m venv venv
-venv\Scripts\activate
-pip install flask
-```
-
----
-
-## 6. Start the Backend Service
-
-Open a new terminal or PowerShell and go to the backend folder:
-
-```powershell
-cd path\to\backend_service
-```
-
-Build and start the backend with Docker Compose:
-
-```powershell
+```bash
+cd backend_service
 docker compose up -d --build
 ```
 
-After the backend starts, check whether it is running:
+Check `http://localhost:8000/api/health` for both `status` and `weights_available`. Swagger UI: `http://localhost:8000/docs`. See [backend setup](../backend_service/README_BACKEND.md) for current missing-artifact caveats.
 
-```text
-http://localhost:8000/api/health
-```
+**Terminal 2 — Frontend:** from the repository root:
 
-A successful response should look similar to:
-
-```json
-{
-  "status": "ok",
-  "weights_available": {
-    "early_fusion": true,
-    "two_fusion": true
-  }
-}
-```
-
-You can also open the FastAPI documentation page:
-
-```text
-http://localhost:8000/docs
-```
-
----
-
-## 7. Start the Frontend Website
-
-Open another terminal or PowerShell and go to the frontend folder:
-
-```powershell
-cd path\to\HybridVision_Web
-```
-
-Run the Flask app:
-
-```powershell
+```bash
+cd HybridVision_Web
+python -m pip install flask
 python app.py
 ```
 
-If `python` does not work on Windows, try:
+Open **http://localhost:8888**. Visit `/detection`, `/comparison`, or `/tracking` as needed. Stop the Flask process with `Ctrl+C`; stop the backend with `docker compose down` in `backend_service/`.
 
-```powershell
-py app.py
-```
+## Backend routes used
 
-The frontend should start at:
+| Endpoint | Used by | Response |
+| --- | --- | --- |
+| `GET /api/health` | Detection | Availability/status information. |
+| `POST /api/detect` | Detection image mode | Detection JSON and image `visualization_url`. |
+| `POST /api/detect-sequence` | Detection ZIP mode | Summary, per-frame detections and three generated MP4 URLs. |
+| `GET /api/compare` | Comparison | Precomputed reconstruction statistics and sample URLs. |
 
-```text
-http://localhost:8888
-```
-
-Open the website in your browser:
-
-```text
-http://localhost:8888/
-```
-
----
-
-## 8. How to Use the Detection Page
-
-Open:
-
-```text
-http://localhost:8888/detection
-```
-
-The Detection page supports single-frame RGB-Event detection.
-
-Steps:
-
-1. Upload an **RGB Image**.
-2. Upload a synchronized **Event Frame Image**.
-3. Select a fusion model:
-   - `two_fusion` recommended
-   - `early_fusion`
-4. Set the confidence threshold, for example `0.25`.
-5. Click **Run Detection**.
-6. The page will display:
-   - RGB input preview
-   - Event input preview
-   - Detection output image returned by the backend
-   - Detection class, confidence, `bbox_xyxy`, and `bbox_xywh`
-
-The frontend sends a request to:
-
-```text
-POST http://localhost:8000/api/detect
-```
-
-The request contains:
-
-```text
-method: two_fusion or early_fusion
-rgb_file: uploaded RGB image
-event_file: uploaded Event frame image
-confidence: confidence threshold
-use_tracking: false
-```
-
-The backend returns a JSON response containing `detections` and `visualization_url`. The frontend displays the image by combining the backend address with the returned relative URL:
-
-```javascript
-resultImage.src = "http://localhost:8000" + result.visualization_url;
-```
-
-Important note: the current version supports one RGB image and one Event frame image. It does not directly support videos, image sequence ZIP files, or raw event streams.
-
----
-
-## 9. Stop the System
-
-### Stop the frontend
-
-In the terminal running `python app.py`, press:
-
-```text
-Ctrl + C
-```
-
-### Stop the backend
-
-Go to the backend folder:
-
-```powershell
-cd path\to\backend_service
-```
-
-Run:
-
-```powershell
-docker compose down
-```
-
----
-
-## 10. Quick Start Summary
-
-Start backend:
-
-```powershell
-cd path\to\backend_service
-docker compose up -d --build
-```
-
-Start frontend:
-
-```powershell
-cd path\to\HybridVision_Web
-python app.py
-```
-
-Open website:
-
-```text
-http://localhost:8888
-```
-
-Use Detection page:
-
-```text
-http://localhost:8888/detection
-```
-
-Use Comparison page:
-
-```text
-http://localhost:8888/comparison
-```
+The backend additionally allows `POST /api/compare`, but the frontend uses GET. `use_tracking=true` is not implemented by the backend and gives HTTP 501; the frontend sets it to `false` for image detection.
