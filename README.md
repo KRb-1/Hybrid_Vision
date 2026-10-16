@@ -14,6 +14,15 @@
   <a href="#repository-structure">Code</a>
 </p>
 
+## Video Demo
+
+<p align="center">
+  <a href="HybridVision_Web/static/images/demo_detection.mp4">
+    <img src="assets/readme/demo_detection.gif" alt="Hybrid Vision web demo: RGB-Event drone detection" width="900">
+  </a>
+</p>
+<p align="center"><em>Click the GIF to open the original MP4 demo.</em></p>
+
 ## Overview
 
 **Hybrid Vision** is an end-to-end course project exploring **drone detection from synchronized RGB images and event-camera representations** using the [FRED (Florence RGB-Event Drone) dataset](https://github.com/miccunifi/FRED). It combines a study of three YOLO-based RGB–Event fusion approaches with event-only reconstruction baselines, a tracking/trajectory-prediction module, and a browser-based demonstration.
@@ -21,10 +30,6 @@
 The demo lets users select a fusion model, submit either a synchronized **single image pair** or a **pair of ZIP archives of image frames**, and inspect detections. In sequence mode, the backend produces RGB-input, Event-input and annotated-output MP4 files for synchronized playback in the website. The site also includes offline reconstruction comparisons and a tracking showcase page.
 
 > **Scope:** The sequence workflow accepts paired **frame ZIPs**, not direct MP4 uploads or raw event streams. The Tracking page is a **precomputed showcase**; real-time tracking is **not** connected to the detection API.
-
-<!-- Add a real screenshot/GIF after committing it to this path:
-<p align="center"><img src="assets/readme/web_demo.gif" alt="Hybrid Vision web demo: ZIP upload and synchronized RGB, Event and detection playback" width="90%"></p>
--->
 
 ## Project at a glance
 
@@ -93,7 +98,7 @@ The **dynamic part** of the Comparison page calls `GET /api/compare` and reads t
 | **Home** | `http://localhost:8888/` | Introduction, pipeline and entry to detection. |
 | **Detection** | `http://localhost:8888/detection` | Single-image or frame-sequence mode; three fusion methods; detection overlays; synchronized triple-video playback for sequence mode. |
 | **Comparison** | `http://localhost:8888/comparison` | Reported static metrics table and dynamically fetched offline E2VID/FireNet statistics and image gallery. |
-| **Tracking** | `http://localhost:8888/tracking` | Informational page with embedded precomputed tracking video and downloads **when those static files are supplied**. |
+| **Tracking** | `http://localhost:8888/tracking` | Precomputed tracking video showcase and downloadable results. |
 
 ### Detection modes
 
@@ -102,6 +107,19 @@ The **dynamic part** of the Comparison page calls `GET /api/compare` and reads t
 **Frame-sequence ZIP:** Select `Frame sequence zip`, upload an RGB ZIP and an Event ZIP, choose the model, FPS (default `30`, valid 1–120), and maximum frames (default `300`, valid 1–3000). After processing, watch synchronized **RGB Input / Event Input / Detection Output** MP4 playback. Controls include **Play All, Pause All, Restart**, speed (`0.5×`, `1×`, `1.5×`, `2×`) and synchronized seeking.
 
 Paired ZIPs should each contain image frames with equivalent **natural-sort ordering** (e.g., `000001.png`, `000002.png`, ...). The backend pairs sorted files by position, **not** timestamp or matching filename, and processes up to the shorter sequence or `max_frames`. Ensure data are aligned before uploading. Raw `.aedat`, `.h5` and MP4 inputs are **not** supported by these APIs.
+
+## Tracking and Trajectory Prediction
+
+The project also includes an offline **tracking and trajectory-prediction** module that associates detections with **ByteTrack** and predicts future drone bounding boxes using an event-aware **Transformer**. The following GIF previews a precomputed result from the tracking showcase page.
+
+<p align="center">
+  <a href="HybridVision_Web/static/tracking/seq51/output.mp4">
+    <img src="assets/readme/tracking_demo.gif" alt="Drone tracking and trajectory prediction demo" width="820">
+  </a>
+</p>
+<p align="center"><em>Click the GIF to open the original MP4 demo.</em></p>
+
+See the [tracking module](trackpre/) for implementation details and recorded results.
 
 ## Quick start
 
